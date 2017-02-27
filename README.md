@@ -85,8 +85,8 @@ However, you can customize this behavior using custom `opener`.
 
 ```
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
->>> pyjq.all('{user, title: .titles[]}', value)
-[{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
+>>> pyjq.first('{user, title: .titles[]}', value)
+[{'user': 'stedolan', 'title': 'JQ Primer'}]
 ```
 
 `first` returns `default` when there are no results.
