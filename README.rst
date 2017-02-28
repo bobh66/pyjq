@@ -125,6 +125,7 @@ Exception if there are no results.
 ``compile`` returns a pyjq Script object with the compiled jq filter.  It can be used to validate a filter.
 
 ::
+    >>> filter = '.titles[] | select(test("T"))'
     >>>  pyjq.compile(filter)
     <_pyjq.Script object at 0x7fce4cedb4d0>
 
