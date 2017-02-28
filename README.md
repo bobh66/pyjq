@@ -115,14 +115,14 @@ IndexError: Result of jq is empty
 
 `compile` returns a pyjq Script object with the compiled jq filter.  It can be used to validate a filter.
 
-...
+```
 >>>  pyjq.compile(filter)
 <_pyjq.Script object at 0x7fce4cedb4d0>
-...
+```
 
 `compile` will raise an Exception if the filter is not valid for jq:
 
-...
+```
 >>> filter = '.titles{} | select(test("T"))'
 >>> pyjq.compile(filter)
 Traceback (most recent call last):
@@ -133,7 +133,7 @@ Traceback (most recent call last):
 ValueError: jq: error: syntax error, unexpected '{', expecting $end (Unix shell quoting issues?) at <top-level>, line 1:
 .titles{} | select(test("T"))
 jq: 1 compile error
-...
+```
 
 Limitation
 ----------
