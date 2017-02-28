@@ -62,7 +62,7 @@ Only four APIs are provided:
 
 `all` takes an optional argument `vars`.
 `vars` is a dictonary of predefined variables for `script`.
-The values in `vars` are avaiable in the `script` as a `$key`.
+The values in `vars` are available in the `script` as a `$key`.
 That is, `vars` works like `--arg` option and `--argjson` option of jq command.
 ```
 >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
@@ -81,7 +81,7 @@ Additionally, `all` takes an optional argument `opener`.
 The default `opener` will simply download contents by `urllib.request.urlopen` and decode by `json.decode`.
 However, you can customize this behavior using custom `opener`.
 
-`first` is almost some to `all` but it `first` returns the first result of transformation.
+`first` is similar to `all` but it only returns the first result of transformation.
 
 ```
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
@@ -105,13 +105,35 @@ However, you can customize this behavior using custom `opener`.
 'Third JS'
 ```
 
-`one` do also returns the first result of transformation but raise Exception if there are no results.
+`one` also returns the first result of transformation but raises an Exception if there are no results.
 
 ```
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.one('.titles[] | select(test("T"))', value)
 IndexError: Result of jq is empty
 ```
+
+`compile` returns a pyjq Script object with the compiled jq filter.  It can be used to validate a filter.
+
+...
+>>>  pyjq.compile(filter)
+<_pyjq.Script object at 0x7fce4cedb4d0>
+...
+
+`compile` will raise an Exception if the filter is not valid for jq:
+
+...
+>>> filter = '.titles{} | select(test("T"))'
+>>> pyjq.compile(filter)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib64/python2.7/site-packages/pyjq.py", line 15, in compile
+    return _pyjq.Script(script.encode('utf-8'), vars=vars)
+  File "_pyjq.pyx", line 164, in _pyjq.Script.__init__ (_pyjq.c:2413)
+ValueError: jq: error: syntax error, unexpected '{', expecting $end (Unix shell quoting issues?) at <top-level>, line 1:
+.titles{} | select(test("T"))
+jq: 1 compile error
+...
 
 Limitation
 ----------
