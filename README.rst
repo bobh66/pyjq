@@ -87,7 +87,7 @@ Additionally, ``all`` takes an optional argument ``opener``. The default
 and decode by ``json.decode``. However, you can customize this behavior
 using custom ``opener``.
 
-``first`` is almost some to ``all`` but it ``first`` returns the first
+``first`` is similar to ``all`` but it ``first`` returns the first
 result of transformation.
 
 ::
@@ -113,7 +113,7 @@ result of transformation.
     >>> pyjq.first('.titles[] | select(test("T"))', value, "Third JS") # The first title which is contains "T"
     'Third JS'
 
-``one`` do also returns the first result of transformation but raise
+``one`` also returns the first result of transformation but raises an
 Exception if there are no results.
 
 ::
@@ -121,6 +121,27 @@ Exception if there are no results.
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.one('.titles[] | select(test("T"))', value)
     IndexError: Result of jq is empty
+
+``compile`` returns a pyjq Script object with the compiled jq filter.  It can be used to validate a filter.
+
+::
+    >>>  pyjq.compile(filter)
+    <_pyjq.Script object at 0x7fce4cedb4d0>
+
+``compile`` will raise an Exception if the filter is not valid for jq:
+
+::
+    >>> filter = '.titles{} | select(test("T"))'
+    >>> pyjq.compile(filter)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "/usr/lib64/python2.7/site-packages/pyjq.py", line 15, in compile
+        return _pyjq.Script(script.encode('utf-8'), vars=vars)
+      File "_pyjq.pyx", line 164, in _pyjq.Script.__init__ (_pyjq.c:2413)
+    ValueError: jq: error: syntax error, unexpected '{', expecting $end (Unix shell quoting issues?) at <top-level>, line 1:
+    .titles{} | select(test("T"))
+    jq: 1 compile error
+
 
 Limitation
 ----------
